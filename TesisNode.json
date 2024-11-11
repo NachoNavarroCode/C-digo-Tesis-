@@ -1,0 +1,569 @@
+[
+    {
+        "id": "dad0db52cf469d9b",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "989ede5028846cba",
+        "type": "serial in",
+        "z": "dad0db52cf469d9b",
+        "name": "",
+        "serial": "7f9c66cc3bf69d05",
+        "x": 170,
+        "y": 360,
+        "wires": [
+            [
+                "6867ad2ca115ae49",
+                "103f48dac190da75",
+                "b2814441b26e6d2a",
+                "3765c48e825ee9eb",
+                "ecd789ad108be183",
+                "be810a0844e72999",
+                "b2268b7c984e2854",
+                "70e3b06a087f1e98"
+            ]
+        ]
+    },
+    {
+        "id": "103f48dac190da75",
+        "type": "function",
+        "z": "dad0db52cf469d9b",
+        "name": "CORRIENTE",
+        "func": "\n\nmsg.topic= \"Corriente\";\nmsg.payload = parseFloat(msg.payload.split(',')[1]);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 220,
+        "wires": [
+            [
+                "70e3b06a087f1e98"
+            ]
+        ]
+    },
+    {
+        "id": "6867ad2ca115ae49",
+        "type": "function",
+        "z": "dad0db52cf469d9b",
+        "name": "VOLTAJE",
+        "func": "msg.topic= \"Voltaje\";\n\nmsg.payload = parseFloat(msg.payload.split(',')[0]);\nreturn msg",
+        "outputs": 1,
+        "timeout": "0",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 140,
+        "wires": [
+            [
+                "70e3b06a087f1e98"
+            ]
+        ]
+    },
+    {
+        "id": "53b277c8352baf1a",
+        "type": "ui_gauge",
+        "z": "dad0db52cf469d9b",
+        "name": "",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 10,
+        "width": 12,
+        "height": 7,
+        "gtype": "gage",
+        "title": "FP ",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "0.5",
+        "seg2": "",
+        "x": 570,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "b2814441b26e6d2a",
+        "type": "function",
+        "z": "dad0db52cf469d9b",
+        "name": "F.P",
+        "func": "\n\nmsg.topic= \"Factor\";\nmsg.payload = parseFloat(msg.payload.split(',')[2]);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 280,
+        "wires": [
+            [
+                "53b277c8352baf1a"
+            ]
+        ]
+    },
+    {
+        "id": "ecd789ad108be183",
+        "type": "function",
+        "z": "dad0db52cf469d9b",
+        "name": "P.APARENTE",
+        "func": "\n\nmsg.topic= \"Corriente\";\nmsg.payload = parseFloat(msg.payload.split(',')[1]);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 420,
+        "wires": [
+            [
+                "b6b5d2ab568637b5"
+            ]
+        ]
+    },
+    {
+        "id": "3765c48e825ee9eb",
+        "type": "function",
+        "z": "dad0db52cf469d9b",
+        "name": "P.ACTIVA",
+        "func": "\n\n\nmsg.topic= \"Voltaje\";\nmsg.payload = parseFloat(msg.payload.split(',')[0]);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 360,
+        "wires": [
+            [
+                "59704ebd2c927722"
+            ]
+        ]
+    },
+    {
+        "id": "be810a0844e72999",
+        "type": "function",
+        "z": "dad0db52cf469d9b",
+        "name": "Angulo Desf.",
+        "func": "\n\nmsg.topic= \"AC\";\nmsg.payload = parseFloat(msg.payload.split(',')[1]);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 480,
+        "wires": [
+            [
+                "a62afc3e44e8b003"
+            ]
+        ]
+    },
+    {
+        "id": "a62afc3e44e8b003",
+        "type": "ui_template",
+        "z": "dad0db52cf469d9b",
+        "group": "a2b6f05e9d5b8b2f",
+        "name": "Vector Corriente vs Voltaje",
+        "order": 5,
+        "width": 10,
+        "height": 7,
+        "format": "<div style=\"width: 100%; text-align: center;\">\n    <canvas id=\"vectorCanvas\" width=\"300\" height=\"300\"></canvas>\n</div>\n\n<script>\n    // Obtén el contexto del lienzo\n    var canvas = document.getElementById('vectorCanvas');\n    var ctx = canvas.getContext('2d');\n\n    // Dibuja ejes X e Y\n    ctx.beginPath();\n    ctx.moveTo(0, canvas.height / 2);\n    ctx.lineTo(canvas.width, canvas.height / 2);\n    ctx.strokeStyle = 'black';\n    ctx.stroke();\n\n    ctx.beginPath();\n    ctx.moveTo(canvas.width / 2, 0);\n    ctx.lineTo(canvas.width / 2, canvas.height);\n    ctx.strokeStyle = 'black';\n    ctx.stroke();\n\n    // Función para actualizar el vector con el ángulo actual\n    function updateVector(angle) {\n        // Convierte grados a radianes\n        var angleRad = angle * (Math.PI / 180);\n\n        // Calcula las coordenadas finales del vector\n        var vectorX = Math.cos(angleRad) * 100;\n        var vectorY = Math.sin(angleRad) * 100;\n\n        // Borra el lienzo\n        ctx.clearRect(0, 0, canvas.width, canvas.height);\n\n        // Vuelve a dibujar ejes X e Y\n        ctx.beginPath();\n        ctx.moveTo(0, canvas.height / 2);\n        ctx.lineTo(canvas.width, canvas.height / 2);\n        ctx.strokeStyle = 'black';\n        ctx.stroke();\n\n        ctx.beginPath();\n        ctx.moveTo(canvas.width / 2, 0);\n        ctx.lineTo(canvas.width / 2, canvas.height);\n        ctx.strokeStyle = 'black';\n        ctx.stroke();\n\n        // Dibuja el vector\n        ctx.beginPath();\n        ctx.moveTo(canvas.width / 2, canvas.height / 2);\n        ctx.lineTo(canvas.width / 2 + vectorX, canvas.height / 2 - vectorY);\n        ctx.strokeStyle = 'red';\n        ctx.stroke();\n\n        // Etiqueta los extremos de los ejes\n        ctx.fillStyle = 'black';\n        ctx.fillText('0°', canvas.width / 2 + 140 , canvas.height / 2 - 2);\n        ctx.fillText('90°', canvas.width / 2 + 2 , canvas.height / 2 - 140 );\n        ctx.fillText('180°', canvas.width / 2 - 140, canvas.height / 2 - 2);\n        ctx.fillText('270°', canvas.width / 2 + 2, canvas.height / 2 + 140);\n    }\n\n    // Inicializa el ángulo en 0\n    var angle = 90;\n\n    // Variable para controlar la dirección del ángulo\n    var direction = -1; // 1 para aumentar, -1 para disminuir\n\n    // Temporizador para actualizar el ángulo cada cierto tiempo\n    var timer = setInterval(function() {\n        // Actualiza el vector con el ángulo actual\n        updateVector(angle);\n        \n        // Incrementa o decrementa el ángulo según la dirección\n        angle += direction;\n        \n        // Si el ángulo alcanza 90 grados, cambia la dirección\n        if ( angle <= 10 ) {\n            direction *= 1;\n        }\n    }, 100); // Cambia el valor de 100 por el tiempo en milisegundos entre actualizaciones\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 620,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f924fb918ec983d7",
+        "type": "ui_text",
+        "z": "dad0db52cf469d9b",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 2,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Vector Corriente vs Voltaje",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 920,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "59704ebd2c927722",
+        "type": "ui_gauge",
+        "z": "dad0db52cf469d9b",
+        "name": "",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 3,
+        "width": 6,
+        "height": 5,
+        "gtype": "wave",
+        "title": "Potencia Activa",
+        "label": " kW",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "500",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 600,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "b6b5d2ab568637b5",
+        "type": "ui_gauge",
+        "z": "dad0db52cf469d9b",
+        "name": "",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 11,
+        "width": 6,
+        "height": 5,
+        "gtype": "wave",
+        "title": "Potencia Aparente",
+        "label": "VA",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "500",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 610,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a94ee5359b1aa949",
+        "type": "rpi-gpio out",
+        "z": "dad0db52cf469d9b",
+        "name": "",
+        "pin": "13",
+        "set": "",
+        "level": "0",
+        "freq": "2000",
+        "out": "pwm",
+        "bcm": true,
+        "x": 560,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "c19683546aab7b62",
+        "type": "ui_slider",
+        "z": "dad0db52cf469d9b",
+        "name": "",
+        "label": "PWM %",
+        "tooltip": "",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 15,
+        "width": 10,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "x": 400,
+        "y": 60,
+        "wires": [
+            [
+                "a94ee5359b1aa949"
+            ]
+        ]
+    },
+    {
+        "id": "15ccd542c1d505f2",
+        "type": "rpi-gpio out",
+        "z": "dad0db52cf469d9b",
+        "name": "",
+        "pin": "12",
+        "set": "",
+        "level": "0",
+        "freq": "1000",
+        "out": "pwm",
+        "bcm": true,
+        "x": 880,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "b2268b7c984e2854",
+        "type": "debug",
+        "z": "dad0db52cf469d9b",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "bd5c647c63c0f0a7",
+        "type": "function",
+        "z": "dad0db52cf469d9b",
+        "name": "Conversión",
+        "func": "\n\n\nvar valorFP = msg.payload;\nvar valorPWM = valorFP * 100;\nmsg.payload = valorPWM;\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 280,
+        "wires": [
+            [
+                "15ccd542c1d505f2"
+            ]
+        ]
+    },
+    {
+        "id": "70e3b06a087f1e98",
+        "type": "ui_chart",
+        "z": "dad0db52cf469d9b",
+        "name": "",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 1,
+        "width": 12,
+        "height": 5,
+        "label": "FP L1",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "s",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-300",
+        "ymax": "300",
+        "removeOlder": "50",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "1",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#fe0b0b",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "x": 570,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f9ae8907b243c313",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 4,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "c85e7bf0be8327e1",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 6,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "5d89fbae03ee8488",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 7,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "169eccb9fb06ef99",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 8,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "364173bd42bb8a6d",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 9,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "c0b03d230b416dbc",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 12,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "a5a9a239004b4948",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 13,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "b525ac50497d9bdf",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 14,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "7a3e42725462415f",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 16,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "b3e56937718508fd",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 17,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "c8f36b3d5e81dc71",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 18,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "42318403560ecb2f",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 19,
+        "width": 18,
+        "height": 1
+    },
+    {
+        "id": "70491ae570dcac3c",
+        "type": "ui_spacer",
+        "z": "dad0db52cf469d9b",
+        "name": "spacer",
+        "group": "a2b6f05e9d5b8b2f",
+        "order": 20,
+        "width": 18,
+        "height": 1
+    },
+    {
+        "id": "7f9c66cc3bf69d05",
+        "type": "serial-port",
+        "name": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "19200",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "/n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "1000"
+    },
+    {
+        "id": "a2b6f05e9d5b8b2f",
+        "type": "ui_group",
+        "name": "Monitor",
+        "tab": "8baa5275b55d0a40",
+        "order": 1,
+        "disp": false,
+        "width": 30,
+        "collapse": false
+    },
+    {
+        "id": "8baa5275b55d0a40",
+        "type": "ui_tab",
+        "name": "Compensador vectorial paralelo F.P - Monitor",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
